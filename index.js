@@ -73,7 +73,7 @@ const init = async () => {
   }
 
   // Here we login the client.
-  client.login(client.config.token);
+  client.login(process.env.BOTTOKEN);
 
 // End top-level async/await function.
 };
