@@ -71,7 +71,7 @@ const init = async () => {
     const thisLevel = client.config.permLevels[i];
     client.levelCache[thisLevel.name] = thisLevel.level;
   }
-
+  console.log(process.env)
   // Here we login the client.
   client.login(process.env.BOTTOKEN);
 
