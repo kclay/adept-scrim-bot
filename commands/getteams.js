@@ -1,15 +1,43 @@
-exports.run = async (client, message, args, level) => {
-  let lobbyReference = message.member.voiceChannel;
-  let memberShuffle = FYshuffle(['hounds', 'levy', 'krasher', 'boxes', 'fierce', 'eclipse']);
-  if (lobbyReference.members.length !== 6) {
-    let splitArray = randChunkSplit(memberShuffle, 3)
-    console.log(splitArray);
-    message.channel.send(splitArray);
-  } else {
-    let splitArray = randChunkSplit(lobbyReference.members, 3)
-    console.log(splitArray);
-  }
+const faker = require('faker');
 
+exports.run = async (client, message, args, level) => {
+  let teamSize = args[0]
+  let lobbyReference = message.member.voiceChannel;
+  let lobbyMembers = [];
+  
+  lobbyReference.members.forEach(member => {
+    lobbyMembers.push(member);
+  })
+  let memberShuffle = FYshuffle(lobbyMembers);
+  let teamGroups = randChunkSplit(memberShuffle, 3)
+  
+  teamGroups.forEach(team => {
+    teamMembers = []
+    team.forEach(member => {
+      teamMembers.push(member.user.username)
+    })
+    if(teamMembers.length < 3) {
+      message.channel.send({embed: {
+        color: Math.floor(Math.random() * 16777214) + 1,
+        description: "Team Leftovers" + ' = ' + teamMembers.join(' ')
+      }});
+    } else {
+      message.channel.send({embed: {
+        color: Math.floor(Math.random() * 16777214) + 1,
+        description: "Team " + faker.address.country() + ' = ' + teamMembers.join(' ')
+      }});
+    }
+  })
+
+}
+
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
 }
 
 function randChunkSplit(arr,min,max) {
